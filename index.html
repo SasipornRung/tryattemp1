@@ -30,6 +30,9 @@
             border-bottom: 2px solid #E0D6C9;
             padding: 1rem 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .nav {
@@ -48,6 +51,7 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-menu a {
@@ -62,6 +66,35 @@
             color: #8C6239;
         }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tier-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .tier-grey {
+            background: #999;
+            color: white;
+        }
+
+        .tier-green {
+            background: #28a745;
+            color: white;
+        }
+
+        .tier-gold {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #333;
+            border: 2px solid #C2A386;
+        }
+
         /* Buttons */
         .btn {
             background: #8C6239;
@@ -71,13 +104,20 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
         }
 
         .btn:hover {
             background: #A97448;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-secondary {
@@ -86,6 +126,59 @@
 
         .btn-secondary:hover {
             background: #A97448;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .category-btn {
+            min-width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: #8C6239;
+            color: white;
+        }
+
+        .category-btn:not(.active) {
+            background: white;
+            color: #8C6239;
+            border: 2px solid #8C6239;
+        }
+
+        .category-btn:not(.active):hover {
+            background: #8C6239;
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #8C6239;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: scale(1) rotate(0deg); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2) rotate(180deg); 
+            }
         }
 
         /* Hero Section */
@@ -121,22 +214,19 @@
 
         .listings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
+        /* Base listing card */
         .listing-card {
             background: white;
-            border: 1px solid #E0D6C9;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .listing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(140, 98, 57, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .listing-image {
@@ -149,6 +239,13 @@
             font-size: 1.2rem;
             color: #8C6239;
             position: relative;
+            overflow: hidden;
+        }
+
+        .listing-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .listing-badge {
@@ -192,15 +289,22 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #28a745;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .listing-details {
             color: #666;
             margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
-        /* Modal */
+        .listing-location {
+            color: #8C6239;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -210,16 +314,30 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
             background-color: white;
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 2rem;
             border-radius: 10px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
             position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .close {
@@ -256,11 +374,25 @@
             border: 1px solid #E0D6C9;
             border-radius: 5px;
             font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #8C6239;
+            outline: none;
         }
 
         .form-group textarea {
             height: 100px;
             resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
         .checkbox-group {
@@ -274,14 +406,29 @@
             width: auto;
         }
 
-        /* Warning Box */
-        .warning-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
+        /* Alerts */
+        .alert {
             padding: 1rem;
             border-radius: 5px;
             margin: 1rem 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
         }
 
         /* Pages */
@@ -302,6 +449,74 @@
             margin: 2rem 0;
         }
 
+        .verify-section h3 {
+            color: #8C6239;
+            margin-bottom: 1rem;
+        }
+
+        /* Enhanced File Upload Styling */
+        .file-upload {
+            border: 2px dashed #E0D6C9;
+            border-radius: 5px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #8C6239;
+            background-color: rgba(140, 98, 57, 0.05);
+        }
+
+        .file-upload.dragover {
+            border-color: #8C6239;
+            background-color: #f9f6f1;
+        }
+
+        /* File list styling */
+        .file-list {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .file-size {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        /* Alert improvements */
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            white-space: pre-line;
+        }
+
         /* Footer */
         .footer {
             background: #8C6239;
@@ -311,10 +526,243 @@
             margin-top: 3rem;
         }
 
-        /* Responsive */
+        /* Listing Detail Page */
+        .listing-detail {
+            padding: 2rem 0;
+        }
+
+        .detail-header {
+            background: white;
+            border: 1px solid #E0D6C9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8C6239;
+            margin-bottom: 1rem;
+        }
+
+        .detail-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .detail-location {
+            color: #8C6239;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .back-btn {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #E0D6C9;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: #e9ecef;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .detail-images {
+            background: white;
+            border: 1px solid #E0D6C9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: #E0D6C9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8C6239;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            height: 80px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .gallery-item:hover {
+            border-color: #8C6239;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-description {
+            background: white;
+            border: 1px solid #E0D6C9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-description h3 {
+            color: #8C6239;
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .contact-card {
+            background: white;
+            border: 1px solid #E0D6C9;
+            border-radius: 10px;
+            padding: 2rem;
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .contact-card h3 {
+            color: #8C6239;
+            margin-bottom: 1rem;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            background: #8C6239;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .seller-details h4 {
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .seller-details p {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
         @media (max-width: 768px) {
-            .nav-menu {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-meta {
                 flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .image-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-image {
+                height: 250px;
+            }
+
+            .contact-card {
+                position: static;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-direction: row;
                 gap: 1rem;
             }
 
@@ -324,6 +772,15 @@
 
             .listings-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10px;
+                width: calc(100% - 20px);
             }
         }
     </style>
@@ -335,11 +792,12 @@
             <nav class="nav">
                 <div class="logo">CondoSwift</div>
                 <ul class="nav-menu">
-                    <li><a href="#" onclick="showPage('home')" class="active">หน้าแรก</a></li>
-                    <li><a href="#" onclick="showPage('listings')">ประกาศทั้งหมด</a></li>
-                    <li><a href="#" onclick="showPage('verify')">ยืนยันตัวตน</a></li>
-                    <li><a href="#" class="btn" onclick="showModal('authModal')">เข้าสู่ระบบ</a></li>
+                    <li><a href="#" onclick="showPage('home')" class="nav-link active">หน้าแรก</a></li>
                 </ul>
+                <div class="user-info">
+                    <div id="userTier" style="display: none;"></div>
+                    <button id="authBtn" class="btn" onclick="showModal('authModal')">เข้าสู่ระบบ</button>
+                </div>
             </nav>
         </div>
     </header>
@@ -351,35 +809,261 @@
             <div class="container">
                 <h1>ค้นหาคอนโดในฝัน</h1>
                 <p>แพลตฟอร์มซื้อ-ขายคอนโดที่เชื่อถือได้ เรียบง่าย และปลอดภัย</p>
-                <a href="#" class="btn" onclick="showPage('listings')">ดูประกาศทั้งหมด</a>
+                
+                <!-- Sale/Rent Category Selector -->
+                <div style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0;">
+                    <button id="rentBtn" class="btn category-btn active" onclick="switchCategory('rent')">
+                        เช่า
+                    </button>
+                    <button id="saleBtn" class="btn btn-secondary category-btn" onclick="switchCategory('sale')">
+                        ขาย
+                    </button>
+                </div>
+                
+                <!-- Search and Filter Bar -->
+                <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <input type="text" id="searchInput" placeholder="ค้นหาคอนโด..." 
+                           style="flex: 1; max-width: 400px; padding: 0.75rem; border: 1px solid #E0D6C9; border-radius: 25px; font-size: 1rem; background: rgba(255,255,255,0.9);">
+                    
+                    <div style="position: relative;">
+                        <button id="filterToggle" type="button" onclick="toggleFilterDropdown()" 
+                                style="padding: 0.75rem 1.5rem; border: 1px solid #E0D6C9; border-radius: 25px; background: rgba(255,255,255,0.9); color: #666; cursor: pointer; min-width: 120px; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                            <span id="filterLabel">ตัวกรอง</span>
+                            <span>▼</span>
+                        </button>
+                        
+                        <div id="filterDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #E0D6C9; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 10; margin-top: 0.5rem; min-width: 280px;">
+                            <div style="padding: 1rem;">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #8C6239;">ทำเลที่ตั้ง</label>
+                                    <select id="locationFilter" onchange="applyFilter()" style="width: 100%; padding: 0.5rem; border: 1px solid #E0D6C9; border-radius: 5px;">
+                                        <option value="">ทั้งหมด</option>
+                                        <option value="ลาดพร้าว">ลาดพร้าว</option>
+                                        <option value="สีลม">สีลม</option>
+                                        <option value="สุขุมวิท">สุขุมวิท</option>
+                                        <option value="ริวเวอร์ไซด์">ริวเวอร์ไซด์</option>
+                                        <option value="บางโพ">บางโพ</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #8C6239;" id="priceLabel">ช่วงราคาเช่า</label>
+                                    <select id="priceFilter" onchange="applyFilter()" style="width: 100%; padding: 0.5rem; border: 1px solid #E0D6C9; border-radius: 5px;">
+                                        <option value="">ทั้งหมด</option>
+                                        <option value="0-20000">ต่ำกว่า 20,000</option>
+                                        <option value="20000-35000">20,000-35,000</option>
+                                        <option value="35000-50000">35,000-50,000</option>
+                                        <option value="50000-999999999">มากกว่า 50,000</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #8C6239;">ระดับการยืนยัน</label>
+                                    <select id="tierFilter" onchange="applyFilter()" style="width: 100%; padding: 0.5rem; border: 1px solid #E0D6C9; border-radius: 5px;">
+                                        <option value="">ทั้งหมด</option>
+                                        <option value="grey">ยืนยันโทรศัพท์</option>
+                                        <option value="green">ยืนยันเอกสาร</option>
+                                        <option value="gold">Exclusive</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #8C6239;">ห้องนอน</label>
+                                    <select id="bedroomFilter" onchange="applyFilter()" style="width: 100%; padding: 0.5rem; border: 1px solid #E0D6C9; border-radius: 5px;">
+                                        <option value="">ทั้งหมด</option>
+                                        <option value="1">1 ห้อง</option>
+                                        <option value="2">2 ห้อง</option>
+                                        <option value="3">3 ห้อง</option>
+                                        <option value="4">4+ ห้อง</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button onclick="clearAllFilters()" style="flex: 1; padding: 0.5rem; background: #f8f9fa; border: 1px solid #E0D6C9; border-radius: 5px; color: #666; cursor: pointer;">
+                                        ล้างทั้งหมด
+                                    </button>
+                                    <button onclick="toggleFilterDropdown()" style="flex: 1; padding: 0.5rem; background: #8C6239; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                                        ปิด
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" id="postListingBtn" onclick="showPostListingModal()">+ ลงประกาศใหม่</button>
+                </div>
             </div>
         </section>
 
-        <!-- Featured Listings -->
+        <!-- Listings Section -->
         <section class="listings">
             <div class="container">
-                <h2 class="section-title">ประกาศเด่น</h2>
-                <div class="listings-grid" id="featuredListings">
-                    <!-- Featured listings will be populated by JavaScript -->
+                <h2 class="section-title" id="listingTitle">คอนโดสำหรับเช่า</h2>
+                
+                <div id="loadingAll" class="text-center">
+                    <div class="loading"></div>
+                    <p>กำลังโหลด...</p>
                 </div>
+                <div class="listings-grid" id="allListings"></div>
             </div>
         </section>
     </div>
 
-    <!-- Listings Page -->
-    <div id="listings" class="page">
-        <section class="listings">
+    <!-- Listing Detail Page -->
+    <div id="listingDetail" class="page">
+        <section class="listing-detail">
             <div class="container">
-                <h2 class="section-title">ประกาศทั้งหมด</h2>
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <a href="#" class="btn" onclick="showModal('postListingModal')">+ ลงประกาศใหม่</a>
+                <button class="back-btn" onclick="showPage('home')">
+                    ← กลับสู่หน้าแรก
+                </button>
+                
+                <!-- Header -->
+                <div class="detail-header">
+                    <div style="display: flex; justify-content: between; align-items: start; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <h1 class="detail-title" id="detailTitle">Loading...</h1>
+                            <div class="detail-price" id="detailPrice">฿0</div>
+                            <div class="detail-location" id="detailLocation">📍 Loading...</div>
+                            <div class="detail-meta" id="detailMeta">
+                                <div class="meta-item">
+                                    <span>🛏️</span>
+                                    <span id="detailBedrooms">0 ห้องนอน</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>🚿</span>
+                                    <span id="detailBathrooms">0 ห้องน้ำ</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>📐</span>
+                                    <span id="detailSize">0 ตร.ม.</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>🏢</span>
+                                    <span id="detailFloor">ชั้น 0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="detailBadge" style="align-self: flex-start;"></div>
+                    </div>
                 </div>
-                <div class="listings-grid" id="allListings">
-                    <!-- All listings will be populated by JavaScript -->
+
+                <div class="detail-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Images -->
+                        <div class="detail-images">
+                            <div class="main-image" id="mainImage">
+                                <span>รูปภาพหลัก</span>
+                            </div>
+                            <div class="image-gallery" id="imageGallery">
+                                <div class="gallery-item"><span>1</span></div>
+                                <div class="gallery-item"><span>2</span></div>
+                                <div class="gallery-item"><span>3</span></div>
+                                <div class="gallery-item"><span>4</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="detail-description">
+                            <h3>รายละเอียด</h3>
+                            <p id="detailDescription">Loading description...</p>
+                            
+                            <h4 style="margin-top: 2rem; margin-bottom: 1rem; color: #8C6239;">สิ่งอำนวยความสะดวก</h4>
+                            <div class="features-grid" id="featuresList">
+                                <div class="feature-item">
+                                    <span>🏊</span>
+                                    <span>สระว่ายน้ำ</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span>🏋️</span>
+                                    <span>ฟิตเนส</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span>🚗</span>
+                                    <span>ที่จอดรถ</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span>🛡️</span>
+                                    <span>รักษาความปลอดภัย 24/7</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span>🛗</span>
+                                    <span>ลิฟต์</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span>🏪</span>
+                                    <span>ร้านสะดวกซื้อ</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map Section -->
+                        <div class="detail-description">
+                            <h3>ตำแหน่งที่ตั้ง</h3>
+                            <div style="height: 300px; background: #f5f5f5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666; margin-top: 1rem;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; margin-bottom: 1rem;">🗺️</div>
+                                    <p>แผนที่แสดงตำแหน่ง</p>
+                                    <p style="font-size: 0.875rem;">Google Maps Integration</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Contact Card -->
+                    <div>
+                        <div class="contact-card">
+                            <h3>ติดต่อผู้ขาย</h3>
+                            
+                            <div class="seller-info">
+                                <div class="seller-avatar" id="sellerAvatar">U</div>
+                                <div class="seller-details">
+                                    <h4 id="sellerName">ผู้ขาย</h4>
+                                    <p id="sellerTier">ยืนยันโทรศัพท์</p>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+                                <strong>คำเตือน:</strong> ห้ามโอนเงินก่อนเห็นห้องจริง และตรวจสอบเอกสารสิทธิ์ให้ครบถ้วน
+                            </div>
+
+                            <div class="checkbox-group" style="margin-bottom: 1.5rem;">
+                                <input type="checkbox" id="detailConsentCheck" required>
+                                <label for="detailConsentCheck">ฉันรับทราบและยอมรับข้อความเตือนข้างต้น</label>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <p style="margin-bottom: 1rem;"><strong>เบอร์ติดต่อ:</strong> <span id="detailContactNumber">***-***-****</span></p>
+                                <button class="btn" id="detailShowContactBtn" onclick="showDetailContact()" style="width: 100%; margin-bottom: 1rem;">
+                                    แสดงเบอร์เต็ม
+                                </button>
+                                <button class="btn btn-secondary" onclick="shareListing()" style="width: 100%;">
+                                    📤 แชร์ประกาศ
+                                </button>
+                            </div>
+
+                            <!-- Quick Info -->
+                            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #E0D6C9;">
+                                <h4 style="color: #8C6239; margin-bottom: 1rem;">ข้อมูลเพิ่มเติม</h4>
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>รหัสประกาศ:</span>
+                                        <span id="listingCode">CS-001</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>วันที่ลงประกาศ:</span>
+                                        <span id="listingDate">15 ม.ค. 2568</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>จำนวนผู้ชม:</span>
+                                        <span>245 ครั้ง</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-    </div>
 
     <!-- Verify Page -->
     <div id="verify" class="page">
@@ -390,23 +1074,26 @@
                 <div class="verify-section">
                     <h3>ระดับ Grey - ยืนยันเบอร์โทรศัพท์</h3>
                     <p>ยืนยันเบอร์โทรศัพท์เพื่อเริ่มลงประกาศ</p>
-                    <form onsubmit="verifyPhone(event)">
+                    <div id="phoneVerifyForm">
                         <div class="form-group">
                             <label>หมายเลขโทรศัพท์</label>
                             <input type="tel" id="phoneNumber" placeholder="08x-xxx-xxxx" required>
                         </div>
-                        <button type="submit" class="btn">ส่งรหัส OTP</button>
-                    </form>
+                        <button type="button" class="btn" onclick="sendOTP()">ส่งรหัส OTP</button>
+                    </div>
                 </div>
 
-                <div class="verify-section">
+                <div class="verify-section" id="documentSection" style="display: none;">
                     <h3>ระดับ Green - ยืนยันเอกสารสิทธิ์</h3>
                     <p>อัปโหลดโฉนดที่ดิน/เอกสารสิทธิ์เพื่อรับ Green Verified Badge</p>
                     <div class="form-group">
-                        <label>อัปโหลดเอกสาร</label>
-                        <input type="file" accept="image/*,.pdf" onchange="uploadDocument(this)">
+                        <label>อัปโหลดเอกสาร (PDF, JPG, PNG)</label>
+                        <div class="file-upload" id="documentUpload">
+                            <p>ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
+                            <input type="file" id="documentFiles" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                        </div>
                     </div>
-                    <button class="btn btn-secondary" onclick="requestVerification()">ส่งคำขอตรวจสอบ</button>
+                    <button class="btn btn-secondary" onclick="uploadDocuments()">ส่งคำขอตรวจสอบ</button>
                 </div>
 
                 <div class="verify-section">
@@ -422,59 +1109,114 @@
     <div id="authModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('authModal')">&times;</span>
-            <h2>เข้าสู่ระบบ / สมัครสมาชิก</h2>
-            <form onsubmit="authenticate(event)">
-                <div class="form-group">
-                    <label>หมายเลขโทรศัพท์</label>
-                    <input type="tel" id="loginPhone" placeholder="08x-xxx-xxxx" required>
-                </div>
-                <button type="submit" class="btn">ส่งรหัส OTP</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Post Listing Modal -->
-    <div id="postListingModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('postListingModal')">&times;</span>
-            <h2>ลงประกาศใหม่</h2>
-            <form onsubmit="postListing(event)">
-                <div class="form-group">
-                    <label>ชื่อโครงการ</label>
-                    <input type="text" id="projectName" required>
-                </div>
-                <div class="form-group">
-                    <label>ราคา (บาท)</label>
-                    <input type="number" id="price" required>
-                </div>
-                <div class="form-group">
-                    <label>รายละเอียด</label>
-                    <textarea id="description" placeholder="ขนาด, ชั้น, สิ่งอำนวยความสะดวก..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>รูปภาพ</label>
-                    <input type="file" accept="image/*" multiple>
-                </div>
-                <button type="submit" class="btn">ลงประกาศ</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Contact Modal -->
-    <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('contactModal')">&times;</span>
-            <h2>ติดต่อผู้ขาย</h2>
-            <div class="warning-box">
-                <strong>คำเตือน:</strong> ห้ามโอนเงินก่อนเห็นห้องจริง และตรวจสอบเอกสารสิทธิ์ให้ครบถ้วน
+            <h2 id="authTitle">เข้าสู่ระบบ / สมัครสมาชิก</h2>
+            <div id="alertContainer"></div>
+            
+            <!-- Step 1: Phone Input -->
+            <div id="phoneStep">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label>หมายเลขโทรศัพท์</label>
+                        <input type="tel" id="loginPhone" placeholder="08x-xxx-xxxx" required>
+                    </div>
+                    <button type="submit" class="btn" id="sendOTPBtn">
+                        <span>ส่งรหัส OTP</span>
+                        <div class="loading" style="display: none;"></div>
+                    </button>
+                </form>
             </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="consentCheck" required>
-                <label for="consentCheck">ฉันรับทราบและยอมรับข้อความเตือนข้างต้น</label>
+            
+            <!-- Step 2: OTP Verification (shown inline) -->
+            <div id="otpStep" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E0D6C9;">
+                <h3 style="color: #8C6239; margin-bottom: 1rem;">ยืนยันรหัส OTP</h3>
+                <p>รหัสยืนยันถูกส่งไปที่ <span id="inlineOtpPhone" style="color: #8C6239; font-weight: bold;"></span></p>
+                <form id="inlineOtpForm">
+                    <div class="form-group">
+                        <label>รหัส OTP</label>
+                        <input type="text" id="inlineOtpCode" placeholder="123456" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn" id="verifyInlineOTPBtn">
+                        <span>ยืนยัน</span>
+                        <div class="loading" style="display: none;"></div>
+                    </button>
+                </form>
+                <p style="margin-top: 1rem; color: #666; font-size: 0.875rem;">
+                    รหัสสำหรับทดสอบ: 123456
+                </p>
             </div>
-            <div style="text-align: center; margin-top: 1rem;">
-                <p><strong>เบอร์ติดต่อ:</strong> <span id="contactNumber">062-XXX-XXXX</span></p>
-                <button class="btn" onclick="showContact()">แสดงเบอร์เต็ม</button>
+            
+            <!-- Step 3: Account Setup (shown for new users) -->
+            <div id="setupStep" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E0D6C9;">
+                <h3 style="color: #8C6239; margin-bottom: 1rem;">🎉 ยินดีต้อนรับ! จัดการบัญชีของคุณ</h3>
+                <p style="margin-bottom: 2rem; color: #666;">คุณได้เข้าสู่ระบบในระดับ <strong>Grey</strong> (ยืนยันโทรศัพท์) แล้ว เลือกการยืนยันเพิ่มเติมเพื่อเพิ่มความน่าเชื่อถือ</p>
+                
+                <!-- Current Status -->
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <h4 style="color: #8C6239; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        ✅ สถานะปัจจุบัน: <span class="tier-badge tier-grey" style="margin-left: 0.5rem;">ยืนยันโทรศัพท์</span>
+                    </h4>
+                    <p style="color: #666; margin: 0;">สามารถลงประกาศได้แล้ว แต่ยังแสดงเบอร์โทรแบบมาสก์</p>
+                </div>
+                
+                <!-- Upgrade Options -->
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="color: #8C6239; margin-bottom: 1rem;">🚀 อัปเกรดระดับบัญชี</h4>
+                    
+                    <!-- Green Tier Option -->
+                    <div style="border: 2px solid #28a745; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; background: rgba(40, 167, 69, 0.05);">
+                        <div style="display: flex; align-items: center; justify-content: between; margin-bottom: 1rem;">
+                            <div>
+                                <h5 style="color: #28a745; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    🟢 Green Verified <span class="tier-badge tier-green" style="margin-left: 0.5rem;">ยืนยันเอกสาร</span>
+                                </h5>
+                                <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">อัปโหลดเอกสารสิทธิ์เพื่อเพิ่มความน่าเชื่อถือ</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label>อัปโหลดเอกสาร (PDF, JPG, PNG)</label>
+                            <div class="file-upload" id="documentUpload" onclick="document.getElementById('documentFiles').click()" style="padding: 1rem; font-size: 0.875rem;">
+                                <p>ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
+                                <input type="file" id="documentFiles" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                            </div>
+                        </div>
+                        <button class="btn" onclick="uploadDocuments()" style="background: #28a745; width: 100%;">
+                            ส่งคำขอตรวจสอบเอกสาร
+                        </button>
+                    </div>
+                    
+                    <!-- Gold Tier Option -->
+                    <div style="border: 2px solid #FFD700; border-radius: 10px; padding: 1.5rem; background: rgba(255, 215, 0, 0.05);">
+                        <div style="display: flex; align-items: center; justify-content: between; margin-bottom: 1rem;">
+                            <div>
+                                <h5 style="color: #B8860B; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    ✨ Gold Exclusive <span class="tier-badge tier-gold" style="margin-left: 0.5rem;">Exclusive</span>
+                                </h5>
+                                <p style="color: #666; margin: 0.5rem 0 0 0; font-size: 0.875rem;">สำหรับลิสต์ติ้งพิเศษที่ได้รับการคัดสรร</p>
+                            </div>
+                        </div>
+                        <button class="btn" style="background: linear-gradient(45deg, #FFD700, #FFA500); color: #333; width: 100%;">
+                            ติดต่อขอสถานะ Gold
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding-top: 1rem; border-top: 1px solid #E0D6C9;">
+                    <button class="btn btn-secondary" onclick="completeSetup()" style="width: 100%;">
+                        เสร็จสิ้น - เข้าใช้งาน
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Existing User Login (shown for returning users) -->
+            <div id="welcomeBackStep" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E0D6C9;">
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="color: #8C6239; margin-bottom: 1rem;">🎉 ยินดีต้อนรับกลับ!</h3>
+                    <p style="color: #666; margin-bottom: 2rem;">เข้าสู่ระบบสำเร็จแล้ว</p>
+                    <button class="btn" onclick="completeSetup()" style="width: 100%;">
+                        เข้าใช้งาน
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -485,14 +1227,107 @@
             <span class="close" onclick="closeModal('otpModal')">&times;</span>
             <h2>ใส่รหัส OTP</h2>
             <p>รหัสยืนยันถูกส่งไปที่ <span id="otpPhone"></span></p>
-            <form onsubmit="verifyOTP(event)">
+            <div id="otpAlerts"></div>
+            <form id="otpForm">
                 <div class="form-group">
                     <label>รหัส OTP</label>
                     <input type="text" id="otpCode" placeholder="123456" maxlength="6" required>
                 </div>
-                <button type="submit" class="btn">ยืนยัน</button>
+                <button type="submit" class="btn" id="verifyOTPBtn">
+                    <span>ยืนยัน</span>
+                    <div class="loading" style="display: none;"></div>
+                </button>
             </form>
-            <p style="margin-top: 1rem; color: #666;">รหัสสำหรับทดสอบ: 123456</p>
+            <p style="margin-top: 1rem; color: #666; font-size: 0.875rem;">
+                รหัสสำหรับทดสอบ: 123456
+            </p>
+        </div>
+    </div>
+
+    <!-- Post Listing Modal -->
+    <div id="postListingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('postListingModal')">&times;</span>
+            <h2>ลงประกาศใหม่</h2>
+            <div id="postListingAlerts"></div>
+            <form id="postListingForm">
+                <div class="form-group">
+                    <label>ชื่อโครงการ *</label>
+                    <input type="text" id="projectName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ราคา (บาท) *</label>
+                        <input type="number" id="price" required min="1000">
+                    </div>
+                    <div class="form-group">
+                        <label>ที่อยู่/ย่าน</label>
+                        <input type="text" id="location">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ห้องนอน</label>
+                        <select id="bedrooms">
+                            <option value="1">1 ห้อง</option>
+                            <option value="2">2 ห้อง</option>
+                            <option value="3">3 ห้อง</option>
+                            <option value="4">4+ ห้อง</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ห้องน้ำ</label>
+                        <select id="bathrooms">
+                            <option value="1">1 ห้อง</option>
+                            <option value="2">2 ห้อง</option>
+                            <option value="3">3 ห้อง</option>
+                            <option value="4">4+ ห้อง</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ขนาด (ตร.ม.)</label>
+                        <input type="number" id="size" min="10">
+                    </div>
+                    <div class="form-group">
+                        <label>ชั้น</label>
+                        <input type="number" id="floor" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>รายละเอียด *</label>
+                    <textarea id="description" placeholder="อธิบายรายละเอียดคอนโด, สิ่งอำนวยความสะดวก, สภาพห้อง..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn" id="submitListingBtn">
+                    <span>ลงประกาศ</span>
+                    <div class="loading" style="display: none;"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('contactModal')">&times;</span>
+            <h2>ติดต่อผู้ขาย</h2>
+            <div class="alert alert-warning">
+                <strong>คำเตือน:</strong> ห้ามโอนเงินก่อนเห็นห้องจริง และตรวจสอบเอกสารสิทธิ์ให้ครบถ้วน
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="consentCheck" required>
+                <label for="consentCheck">ฉันรับทราบและยอมรับข้อความเตือนข้างต้น</label>
+            </div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <p><strong>เบอร์ติดต่อ:</strong> <span id="contactNumber">กำลังโหลด...</span></p>
+                <button class="btn" id="showContactBtn" onclick="showContact()">แสดงเบอร์เต็ม</button>
+            </div>
         </div>
     </div>
 
@@ -500,244 +1335,835 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 CondoSwift - แพลตฟอร์มคอนโดที่เชื่อถือได้</p>
+            <p>พัฒนาด้วย ❤️ เพื่อความปลอดภัยในการซื้อ-ขายคอนโด</p>
         </div>
     </footer>
 
     <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:3000/api';
+        
+        // State management
+        let currentUser = null;
+        let authToken = null;
+        let currentListingId = null;
+        let currentCategory = 'rent';
+
         // Mock data
         const mockListings = [
             {
                 id: 1,
-                title: "Life Ladprao",
-                price: "3,500,000",
-                details: "1 ห้องนอน, 35 ตร.ม., ชั้น 12",
-                tier: "grey",
-                badge: "ยืนยันโทรศัพท์",
-                featured: true
+                title: 'Life Ladprao',
+                price: 3500000,
+                rentPrice: 25000,
+                description: '1 ห้องนอน, 35 ตร.ม., ชั้น 12, พร้อมเฟอร์นิเจอร์',
+                images: [],
+                tier: 'grey',
+                featured: true,
+                status: 'active',
+                contactPhone: '+66812345678',
+                location: 'ลาดพร้าว',
+                bedrooms: 1,
+                bathrooms: 1,
+                size: 35,
+                floor: 12,
+                forSale: true,
+                forRent: true
             },
             {
                 id: 2,
-                title: "The Lumpini 24",
-                price: "5,200,000",
-                details: "2 ห้องนอน, 48 ตร.ม., ชั้น 18",
-                tier: "green",
-                badge: "ยืนยันเอกสาร",
-                featured: true
+                title: 'The Lumpini 24',
+                price: 5200000,
+                rentPrice: 35000,
+                description: '2 ห้องนอน, 48 ตร.ม., ชั้น 18, วิวแม่น้ำเจ้าพระยา',
+                images: [],
+                tier: 'green',
+                featured: true,
+                status: 'active',
+                contactPhone: '+66812345679',
+                location: 'สีลม',
+                bedrooms: 2,
+                bathrooms: 2,
+                size: 48,
+                floor: 18,
+                forSale: true,
+                forRent: true
             },
             {
                 id: 3,
-                title: "Magnolias Waterfront",
-                price: "12,800,000",
-                details: "3 ห้องนอน, 85 ตร.ม., ชั้น 25",
-                tier: "gold",
-                badge: "Exclusive",
-                featured: true
+                title: 'Magnolias Waterfront',
+                price: 12800000,
+                rentPrice: 80000,
+                description: '3 ห้องนอน, 85 ตร.ม., ชั้น 25, Luxury Riverfront',
+                images: [],
+                tier: 'gold',
+                featured: true,
+                status: 'active',
+                contactPhone: '+66812345680',
+                location: 'ริวเวอร์ไซด์',
+                bedrooms: 3,
+                bathrooms: 3,
+                size: 85,
+                floor: 25,
+                forSale: true,
+                forRent: true
             },
             {
                 id: 4,
-                title: "Chapter One Flow",
-                price: "2,890,000",
-                details: "1 ห้องนอน, 28 ตร.ม., ชั้น 8",
-                tier: "grey",
-                badge: "ยืนยันโทรศัพท์",
-                featured: false
+                title: 'Chapter One Flow',
+                price: 2890000,
+                rentPrice: 18000,
+                description: '1 ห้องนอน, 28 ตร.ม., ชั้น 8',
+                images: [],
+                tier: 'grey',
+                featured: false,
+                status: 'active',
+                contactPhone: '+66812345681',
+                location: 'บางโพ',
+                bedrooms: 1,
+                bathrooms: 1,
+                size: 28,
+                floor: 8,
+                forSale: true,
+                forRent: false
             },
             {
                 id: 5,
-                title: "Ideo Mobi Sukhumvit",
-                price: "4,750,000",
-                details: "1 ห้องนอน, 42 ตร.ม., ชั้น 15",
-                tier: "green",
-                badge: "ยืนยันเอกสาร",
-                featured: false
+                title: 'Ideo Mobi Sukhumvit',
+                price: 4750000,
+                rentPrice: 28000,
+                description: '1 ห้องนอน, 42 ตร.ม., ชั้น 15',
+                images: [],
+                tier: 'green',
+                featured: false,
+                status: 'active',
+                contactPhone: '+66812345682',
+                location: 'สุขุมวิท',
+                bedrooms: 1,
+                bathrooms: 1,
+                size: 42,
+                floor: 15,
+                forSale: false,
+                forRent: true
             }
         ];
 
-        let currentUser = null;
-        let userListings = [...mockListings];
+        let mockFeatures = [
+            '🏊 สระว่ายน้ำ',
+            '🏋️ ฟิตเนส',  
+            '🚗 ที่จอดรถ',
+            '🛡️ รักษาความปลอดภัย 24/7',
+            '🛗 ลิฟต์',
+            '🏪 ร้านสะดวกซื้อ',
+            '📶 WiFi ทั่วตึก',
+            '🌳 สวนสาธารณะ',
+            '🏪 ห้องแม่บ้าน',
+            '👨‍💼 ฝ่ายต้อนรับ (Reception)'
+        ];
 
-        // Initialize
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            renderListings();
+            setupEventListeners();
+            loadAllListings();
         });
 
-        // Page navigation
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+        function setupEventListeners() {
+            // Auth forms
+            document.getElementById('authForm').addEventListener('submit', handleSendOTP);
+            document.getElementById('inlineOtpForm').addEventListener('submit', handleVerifyInlineOTP);
+            document.getElementById('postListingForm').addEventListener('submit', handlePostListing);
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    applyFilter();
+                }, 500);
             });
-            
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Update nav active state
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.classList.remove('active');
+
+            // Modal close handlers
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+                
+                // Close filter dropdown when clicking outside
+                if (!event.target.closest('#filterToggle') && !event.target.closest('#filterDropdown')) {
+                    document.getElementById('filterDropdown').style.display = 'none';
+                }
             });
-            event.target.classList.add('active');
         }
 
-        // Modal functions
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
-        // Render listings
-        function renderListings() {
-            const featuredContainer = document.getElementById('featuredListings');
-            const allContainer = document.getElementById('allListings');
+        // Category switching
+        function switchCategory(category) {
+            currentCategory = category;
             
-            if (featuredContainer) {
-                featuredContainer.innerHTML = '';
-                userListings.filter(listing => listing.featured).forEach(listing => {
-                    featuredContainer.appendChild(createListingCard(listing));
-                });
+            // Update button styles
+            document.getElementById('rentBtn').classList.toggle('active', category === 'rent');
+            document.getElementById('saleBtn').classList.toggle('active', category === 'sale');
+            
+            // Update title and price label
+            const title = document.getElementById('listingTitle');
+            const priceLabel = document.getElementById('priceLabel');
+            
+            if (category === 'rent') {
+                title.textContent = 'คอนโดสำหรับเช่า';
+                priceLabel.textContent = 'ช่วงราคาเช่า';
+                updatePriceOptions('rent');
+            } else {
+                title.textContent = 'คอนโดสำหรับขาย';
+                priceLabel.textContent = 'ช่วงราคาขาย';
+                updatePriceOptions('sale');
             }
             
-            if (allContainer) {
-                allContainer.innerHTML = '';
-                userListings.forEach(listing => {
-                    allContainer.appendChild(createListingCard(listing));
-                });
+            clearAllFilters();
+            applyFilter();
+        }
+
+        function updatePriceOptions(category) {
+            const priceFilter = document.getElementById('priceFilter');
+            
+            if (category === 'rent') {
+                priceFilter.innerHTML = `
+                    <option value="">ทั้งหมด</option>
+                    <option value="0-20000">ต่ำกว่า 20,000</option>
+                    <option value="20000-35000">20,000-35,000</option>
+                    <option value="35000-50000">35,000-50,000</option>
+                    <option value="50000-999999999">มากกว่า 50,000</option>
+                `;
+            } else {
+                priceFilter.innerHTML = `
+                    <option value="">ทั้งหมด</option>
+                    <option value="0-3000000">ต่ำกว่า 3 ล้าน</option>
+                    <option value="3000000-5000000">3-5 ล้าน</option>
+                    <option value="5000000-10000000">5-10 ล้าน</option>
+                    <option value="10000000-999999999">มากกว่า 10 ล้าน</option>
+                `;
             }
         }
 
-        function createListingCard(listing) {
-            const card = document.createElement('div');
-            card.className = 'listing-card';
-            card.innerHTML = `
-                <div class="listing-image">
-                    <span>รูปภาพ</span>
-                    <div class="listing-badge badge-${listing.tier}">${listing.badge}</div>
-                </div>
-                <div class="listing-content">
-                    <div class="listing-title">${listing.title}</div>
-                    <div class="listing-price">฿${listing.price}</div>
-                    <div class="listing-details">${listing.details}</div>
-                    <button class="btn" onclick="contactSeller(${listing.id})">ติดต่อผู้ขาย</button>
+        // Filter functions
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function applyFilter() {
+            const search = document.getElementById('searchInput').value;
+            const location = document.getElementById('locationFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+            const tier = document.getElementById('tierFilter').value;
+            const bedroom = document.getElementById('bedroomFilter').value;
+            
+            updateFilterLabel();
+            loadAllListings(1, tier || 'all', search, location, priceRange, bedroom);
+        }
+
+        function updateFilterLabel() {
+            const location = document.getElementById('locationFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+            const tier = document.getElementById('tierFilter').value;
+            const bedroom = document.getElementById('bedroomFilter').value;
+            
+            const activeFilters = [];
+            
+            if (location) activeFilters.push(location);
+            if (priceRange) {
+                const priceText = document.getElementById('priceFilter').options[document.getElementById('priceFilter').selectedIndex].text;
+                activeFilters.push(priceText);
+            }
+            if (tier) {
+                const tierText = document.getElementById('tierFilter').options[document.getElementById('tierFilter').selectedIndex].text;
+                activeFilters.push(tierText);
+            }
+            if (bedroom) activeFilters.push(bedroom + ' ห้องนอน');
+            
+            const filterLabel = document.getElementById('filterLabel');
+            if (activeFilters.length > 0) {
+                filterLabel.textContent = activeFilters.slice(0, 2).join(', ') + (activeFilters.length > 2 ? '...' : '');
+                filterLabel.style.color = '#8C6239';
+                filterLabel.style.fontWeight = '500';
+            } else {
+                filterLabel.textContent = 'ตัวกรอง';
+                filterLabel.style.color = '#666';
+                filterLabel.style.fontWeight = 'normal';
+            }
+        }
+
+        function clearAllFilters() {
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            document.getElementById('tierFilter').value = '';
+            document.getElementById('bedroomFilter').value = '';
+            updateFilterLabel();
+            applyFilter();
+        }
+
+        // Load listings
+        async function loadAllListings(page = 1, tier = 'all', search = '', location = '', priceRange = '', bedroom = '') {
+            const container = document.getElementById('allListings');
+            const loading = document.getElementById('loadingAll');
+            
+            loading.style.display = 'block';
+            
+            try {
+                // Apply client-side filtering for mock data
+                let filteredListings = mockListings;
+                
+                // Filter by category (sale/rent)
+                if (currentCategory === 'sale') {
+                    filteredListings = filteredListings.filter(listing => listing.forSale);
+                } else if (currentCategory === 'rent') {
+                    filteredListings = filteredListings.filter(listing => listing.forRent);
+                }
+                
+                if (search) {
+                    const searchTerm = search.toLowerCase();
+                    filteredListings = filteredListings.filter(listing => 
+                        listing.title.toLowerCase().includes(searchTerm) ||
+                        listing.description.toLowerCase().includes(searchTerm) ||
+                        listing.location?.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                if (location) {
+                    filteredListings = filteredListings.filter(listing => 
+                        listing.location === location
+                    );
+                }
+                
+                if (priceRange) {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    filteredListings = filteredListings.filter(listing => {
+                        const price = currentCategory === 'rent' ? listing.rentPrice : listing.price;
+                        return price >= min && price <= max;
+                    });
+                }
+                
+                if (tier && tier !== 'all') {
+                    filteredListings = filteredListings.filter(listing => 
+                        listing.tier === tier
+                    );
+                }
+                
+                if (bedroom) {
+                    const bedroomCount = bedroom === '4' ? 4 : parseInt(bedroom);
+                    filteredListings = filteredListings.filter(listing => {
+                        if (bedroom === '4') {
+                            return listing.bedrooms >= 4;
+                        }
+                        return listing.bedrooms === bedroomCount;
+                    });
+                }
+                
+                displayListings(filteredListings, container);
+                
+            } catch (error) {
+                console.error('Failed to load listings:', error);
+                container.innerHTML = '<div class="empty-state"><p>ไม่สามารถโหลดประกาศได้</p></div>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayListings(listings, container) {
+            if (!listings || listings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>ไม่พบประกาศที่ตรงกับเงื่อนไข</p></div>';
+                return;
+            }
+
+            container.innerHTML = listings.map(listing => createListingCardHTML(listing)).join('');
+        }
+
+        function createListingCardHTML(listing) {
+            const badgeClass = `badge-${listing.tier}`;
+            const badgeText = getTierLabel(listing.tier);
+            
+            const displayPrice = currentCategory === 'rent' ? listing.rentPrice : listing.price;
+            const pricePrefix = currentCategory === 'rent' ? '/เดือน' : '';
+            const formattedPrice = new Intl.NumberFormat('th-TH').format(displayPrice);
+            
+            let borderStyle = '';
+            let topBorder = '';
+            let specialEffects = '';
+            let hoverEffect = '';
+            
+            switch(listing.tier) {
+                case 'grey':
+                    borderStyle = 'border: 2px solid #999;';
+                    topBorder = '<div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #999, #bbb); z-index: 1;"></div>';
+                    hoverEffect = 'onmouseover="this.style.borderColor=\'#777\'; this.style.boxShadow=\'0 15px 35px rgba(153, 153, 153, 0.3)\'; this.style.transform=\'translateY(-8px)\';" onmouseout="this.style.borderColor=\'#999\'; this.style.boxShadow=\'none\'; this.style.transform=\'translateY(0)\';"';
+                    break;
+                    
+                case 'green':
+                    borderStyle = 'border: 2px solid #28a745; box-shadow: 0 2px 15px rgba(40, 167, 69, 0.15);';
+                    topBorder = '<div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #28a745, #20c997); z-index: 1;"></div>';
+                    hoverEffect = 'onmouseover="this.style.borderColor=\'#1e7e34\'; this.style.boxShadow=\'0 15px 35px rgba(40, 167, 69, 0.35)\'; this.style.transform=\'translateY(-8px)\';" onmouseout="this.style.borderColor=\'#28a745\'; this.style.boxShadow=\'0 2px 15px rgba(40, 167, 69, 0.15)\'; this.style.transform=\'translateY(0)\';"';
+                    break;
+                    
+                case 'gold':
+                    borderStyle = 'border: 3px solid #FFD700; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.25);';
+                    topBorder = '<div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700); z-index: 1;"></div>';
+                    specialEffects = '<div style="position: absolute; top: 12px; left: 12px; font-size: 1.2rem; z-index: 3; animation: sparkle 2s ease-in-out infinite;">✨</div>';
+                    hoverEffect = 'onmouseover="this.style.borderColor=\'#FFA500\'; this.style.boxShadow=\'0 15px 40px rgba(255, 165, 0, 0.4)\'; this.style.transform=\'translateY(-10px)\';" onmouseout="this.style.borderColor=\'#FFD700\'; this.style.boxShadow=\'0 4px 20px rgba(255, 215, 0, 0.25)\'; this.style.transform=\'translateY(0)\';"';
+                    break;
+                    
+                default:
+                    borderStyle = 'border: 2px solid #E0D6C9;';
+                    hoverEffect = 'onmouseover="this.style.transform=\'translateY(-5px)\'; this.style.boxShadow=\'0 10px 25px rgba(140, 98, 57, 0.2)\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'none\';"';
+            }
+            
+            return `
+                <div class="listing-card" 
+                     style="${borderStyle} background: white; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; position: relative;"
+                     ${hoverEffect}
+                     onclick="viewListing(${listing.id})">
+                    ${topBorder}
+                    ${specialEffects}
+                    <div class="listing-image" style="position: relative; z-index: 2;">
+                        <span>รูปภาพ</span>
+                        <div class="listing-badge ${badgeClass}">${badgeText}</div>
+                    </div>
+                    <div class="listing-content" style="position: relative; z-index: 2;">
+                        <div class="listing-title">${listing.title}</div>
+                        <div class="listing-price">฿${formattedPrice}${pricePrefix}</div>
+                        ${listing.location ? `<div class="listing-location">📍 ${listing.location}</div>` : ''}
+                        <div class="listing-details">
+                            ${listing.bedrooms}ห้องนอน • ${listing.bathrooms}ห้องน้ำ
+                            ${listing.size ? ` • ${listing.size} ตร.ม.` : ''}
+                            ${listing.floor ? ` • ชั้น ${listing.floor}` : ''}
+                        </div>
+                        <button class="btn btn-small" onclick="event.stopPropagation(); contactSeller(${listing.id})">
+                            ติดต่อผู้ขาย
+                        </button>
+                    </div>
                 </div>
             `;
-            return card;
         }
 
-        // Authentication
-        function authenticate(event) {
+        // Auth functions
+        async function handleSendOTP(event) {
             event.preventDefault();
-            const phone = document.getElementById('loginPhone').value;
-            document.getElementById('otpPhone').textContent = phone;
-            closeModal('authModal');
-            showModal('otpModal');
-        }
-
-        function verifyOTP(event) {
-            event.preventDefault();
-            const otp = document.getElementById('otpCode').value;
-            if (otp === '123456') {
-                currentUser = { phone: document.getElementById('otpPhone').textContent, verified: true };
-                closeModal('otpModal');
-                alert('เข้าสู่ระบบสำเร็จ!');
-                updateAuthButton();
-            } else {
-                alert('รหัส OTP ไม่ถูกต้อง');
+            const phone = document.getElementById('loginPhone').value.trim();
+            const btn = document.getElementById('sendOTPBtn');
+            
+            setButtonLoading(btn, true);
+            
+            try {
+                // Mock API call
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                showAlert('alertContainer', 'success', 'รหัส OTP ถูกส่งแล้ว');
+                document.getElementById('inlineOtpPhone').textContent = phone;
+                
+                // Show OTP step
+                document.getElementById('otpStep').style.display = 'block';
+                document.getElementById('inlineOtpCode').value = '123456'; // Auto-fill for demo
+                
+                // Focus on OTP input
+                document.getElementById('inlineOtpCode').focus();
+                
+            } catch (error) {
+                showAlert('alertContainer', 'error', 'เกิดข้อผิดพลาด');
+            } finally {
+                setButtonLoading(btn, false);
             }
         }
 
-        function updateAuthButton() {
-            const authButton = document.querySelector('.nav-menu .btn');
+        async function handleVerifyInlineOTP(event) {
+            event.preventDefault();
+            const phone = document.getElementById('inlineOtpPhone').textContent;
+            const otp = document.getElementById('inlineOtpCode').value.trim();
+            const btn = document.getElementById('verifyInlineOTPBtn');
+            
+            setButtonLoading(btn, true);
+            
+            try {
+                if (otp !== '123456') {
+                    showAlert('alertContainer', 'error', 'รหัส OTP ไม่ถูกต้อง');
+                    return;
+                }
+                
+                // Mock API call
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Check if user exists (mock logic)
+                const isExistingUser = mockListings.some(listing => listing.contactPhone === phone);
+                
+                if (isExistingUser) {
+                    // Existing user - show welcome back
+                    currentUser = { id: 1, phone: phone, tier: 'green', verified: true };
+                    document.getElementById('otpStep').style.display = 'none';
+                    document.getElementById('welcomeBackStep').style.display = 'block';
+                    document.getElementById('authTitle').textContent = 'เข้าสู่ระบบสำเร็จ';
+                } else {
+                    // New user - show setup options
+                    currentUser = { id: Date.now(), phone: phone, tier: 'grey', verified: true };
+                    document.getElementById('otpStep').style.display = 'none';
+                    document.getElementById('setupStep').style.display = 'block';
+                    document.getElementById('authTitle').textContent = 'ตั้งค่าบัญชี';
+                }
+                
+                showAlert('alertContainer', 'success', 'ยืนยัน OTP สำเร็จ!');
+                
+            } catch (error) {
+                showAlert('alertContainer', 'error', 'เกิดข้อผิดพลาด');
+            } finally {
+                setButtonLoading(btn, false);
+            }
+        }
+
+        function completeSetup() {
+            updateAuthUI();
+            closeModal('authModal');
+            
+            // Reset modal state
+            resetAuthModal();
+            
+            // Show success message
+            setTimeout(() => {
+                alert('🎉 ยินดีต้อนรับสู่ CondoSwift! คุณสามารถลงประกาศได้แล้ว');
+            }, 500);
+        }
+
+        function resetAuthModal() {
+            document.getElementById('phoneStep').style.display = 'block';
+            document.getElementById('otpStep').style.display = 'none';
+            document.getElementById('setupStep').style.display = 'none';
+            document.getElementById('welcomeBackStep').style.display = 'none';
+            document.getElementById('authTitle').textContent = 'เข้าสู่ระบบ / สมัครสมาชิก';
+            document.getElementById('authForm').reset();
+            document.getElementById('inlineOtpForm').reset();
+            document.getElementById('alertContainer').innerHTML = '';
+        }
+
+        function updateAuthUI() {
+            const authBtn = document.getElementById('authBtn');
+            const userTier = document.getElementById('userTier');
+            
             if (currentUser) {
-                authButton.textContent = 'ออกจากระบบ';
-                authButton.onclick = logout;
+                authBtn.textContent = 'ออกจากระบบ';
+                authBtn.onclick = logout;
+                userTier.style.display = 'block';
+                userTier.innerHTML = `<span class="tier-badge tier-${currentUser.tier}">${getTierLabel(currentUser.tier)}</span>`;
+            } else {
+                authBtn.textContent = 'เข้าสู่ระบบ';
+                authBtn.onclick = () => showModal('authModal');
+                userTier.style.display = 'none';
             }
         }
 
         function logout() {
             currentUser = null;
-            const authButton = document.querySelector('.nav-menu .btn');
-            authButton.textContent = 'เข้าสู่ระบบ';
-            authButton.onclick = () => showModal('authModal');
+            updateAuthUI();
+            resetAuthModal();
             alert('ออกจากระบบแล้ว');
         }
 
-        // Phone verification
-        function verifyPhone(event) {
-            event.preventDefault();
-            const phone = document.getElementById('phoneNumber').value;
-            document.getElementById('otpPhone').textContent = phone;
-            showModal('otpModal');
-        }
-
-        // Document upload
-        function uploadDocument(input) {
-            if (input.files.length > 0) {
-                alert(`อัปโหลดไฟล์ ${input.files[0].name} สำเร็จ`);
-            }
-        }
-
-        function requestVerification() {
-            alert('ส่งคำขอตรวจสอบเอกสารแล้ว\nทีมงานจะตรวจสอบภายใน 2-3 วันทำการ');
-        }
-
         // Post listing
-        function postListing(event) {
+        async function handlePostListing(event) {
             event.preventDefault();
             
             if (!currentUser) {
-                alert('กรุณาเข้าสู่ระบบก่อนลงประกาศ');
+                showAlert('postListingAlerts', 'error', 'กรุณาเข้าสู่ระบบก่อนลงประกาศ');
                 return;
             }
 
-            const projectName = document.getElementById('projectName').value;
-            const price = document.getElementById('price').value;
-            const description = document.getElementById('description').value;
-
-            const newListing = {
-                id: userListings.length + 1,
-                title: projectName,
-                price: parseInt(price).toLocaleString(),
-                details: description || "รายละเอียดเพิ่มเติม",
-                tier: "grey",
-                badge: "ยืนยันโทรศัพท์",
-                featured: false
-            };
-
-            userListings.push(newListing);
-            renderListings();
-            closeModal('postListingModal');
-            alert('ลงประกาศสำเร็จ!');
-            
-            // Reset form
-            document.getElementById('projectName').value = '';
-            document.getElementById('price').value = '';
-            document.getElementById('description').value = '';
+            showAlert('postListingAlerts', 'success', 'ลงประกาศสำเร็จ!');
+            document.getElementById('postListingForm').reset();
+            setTimeout(() => closeModal('postListingModal'), 1500);
         }
 
-        // Contact seller
-        function contactSeller(listingId) {
-            document.getElementById('contactNumber').textContent = '062-XXX-XXXX';
+        function showPostListingModal() {
+            if (!currentUser) {
+                showModal('authModal');
+                return;
+            }
+            showModal('postListingModal');
+        }
+
+        // Contact functions
+        async function contactSeller(listingId) {
+            currentListingId = listingId;
             document.getElementById('consentCheck').checked = false;
+            document.getElementById('contactNumber').textContent = '***-***-****';
             showModal('contactModal');
         }
 
-        function showContact() {
+        async function showContact() {
             const checkbox = document.getElementById('consentCheck');
             if (!checkbox.checked) {
                 alert('กรุณายอมรับข้อตกลงก่อนดูเบอร์ติดต่อ');
                 return;
             }
-            document.getElementById('contactNumber').textContent = '062-123-4567';
-            alert('คุณสามารถติดต่อผู้ขายได้แล้ว\nจำไว้: ห้ามโอนเงินก่อนเห็นห้องจริง!');
+
+            const listing = mockListings.find(l => l.id === currentListingId);
+            if (listing) {
+                document.getElementById('contactNumber').textContent = listing.contactPhone;
+                document.getElementById('showContactBtn').style.display = 'none';
+            }
+        }
+
+        // Document upload functions
+        async function uploadDocuments() {
+            if (!currentUser) {
+                showAlert('alertContainer', 'error', 'กรุณาเข้าสู่ระบบก่อน');
+                return;
+            }
+
+            const files = document.getElementById('documentFiles').files;
+            if (files.length === 0) {
+                showAlert('alertContainer', 'error', 'กรุณาเลือกไฟล์เอกสาร');
+                return;
+            }
+
+            // Check file size and type
+            let hasError = false;
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+
+            Array.from(files).forEach(file => {
+                if (!allowedTypes.includes(file.type)) {
+                    showAlert('alertContainer', 'error', `ไฟล์ ${file.name} ประเภทไม่รองรับ`);
+                    hasError = true;
+                    return;
+                }
+                if (file.size > maxSize) {
+                    showAlert('alertContainer', 'error', `ไฟล์ ${file.name} ขนาดใหญ่เกินไป (สูงสุด 10MB)`);
+                    hasError = true;
+                    return;
+                }
+            });
+
+            if (hasError) return;
+
+            try {
+                // Mock upload process with progress
+                showAlert('alertContainer', 'success', '📤 กำลังอัปโหลดเอกสาร...');
+                
+                // Simulate upload delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const fileNames = Array.from(files).map(file => file.name).join(', ');
+                
+                showAlert('alertContainer', 'success', 
+                    `✅ อัปโหลดเอกสารสำเร็จ!\n\n📄 ไฟล์ที่อัปโหลด:\n${fileNames}\n\n⏳ ทีมงานจะตรวจสอบภายใน 2-3 วันทำการ\n📧 ผลการตรวจสอบจะแจ้งผ่านอีเมลหรือ SMS`
+                );
+                
+                // Reset file input and display
+                document.getElementById('documentFiles').value = '';
+                document.getElementById('selectedFiles').innerHTML = '';
+                
+                // Update user status (mock)
+                if (currentUser) {
+                    currentUser.documentsPending = true;
+                }
+                
+            } catch (error) {
+                showAlert('alertContainer', 'error', 'เกิดข้อผิดพลาดในการอัปโหลด กรุณาลองใหม่');
+            }
+        }
+
+        function showSelectedFiles() {
+            const files = document.getElementById('documentFiles').files;
+            const container = document.getElementById('selectedFiles');
+            
+            if (files.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="margin-top: 1rem;"><strong>ไฟล์ที่เลือก:</strong><ul style="margin: 0.5rem 0 0 1rem;">';
+            Array.from(files).forEach(file => {
+                const size = (file.size / 1024 / 1024).toFixed(2);
+                html += `<li>${file.name} (${size} MB)</li>`;
+            });
+            html += '</ul></div>';
+            
+            container.innerHTML = html;
+        }
+
+        function requestGoldStatus() {
+            showAlert('alertContainer', 'success', 
+                `🏆 คำขอสถานะ Gold ได้รับแล้ว!\n\n📞 ทีมงานจะติดต่อกลับภายใน 1-2 วันทำการ\n📧 กรุณาตรวจสอบอีเมลและโทรศัพท์\n\n✨ เกณฑ์การได้รับสถานะ Gold:\n• ประวัติการใช้งานดี\n• ประกาศคุณภาพสูง\n• การตอบสนองลูกค้าดีเยี่ยม`
+            );
+        }
+
+        function skipVerification() {
+            if (confirm('คุณต้องการข้ามการยืนยันเพิ่มเติมใช่หรือไม่?\n\nหมายเหตุ: คุณสามารถยืนยันได้ภายหลังผ่านเมนู "เข้าสู่ระบบ"')) {
+                completeSetup();
+            }
+        }
+
+        // Utility function for button loading state
+        function setButtonLoading(button, loading) {
+            const span = button.querySelector('span');
+            const loader = button.querySelector('.loading');
+            
+            if (loading) {
+                button.disabled = true;
+                if (span) span.style.display = 'none';
+                if (loader) loader.style.display = 'inline-block';
+            } else {
+                button.disabled = false;
+                if (span) span.style.display = 'inline';
+                if (loader) loader.style.display = 'none';
+            }
+        }
+
+        function viewListing(listingId) {
+            const listing = mockListings.find(l => l.id === listingId);
+            if (!listing) return;
+
+            // Populate detail page
+            document.getElementById('detailTitle').textContent = listing.title;
+            
+            const displayPrice = currentCategory === 'rent' ? listing.rentPrice : listing.price;
+            const pricePrefix = currentCategory === 'rent' ? '/เดือน' : '';
+            const formattedPrice = new Intl.NumberFormat('th-TH').format(displayPrice);
+            document.getElementById('detailPrice').textContent = `฿${formattedPrice}${pricePrefix}`;
+            
+            document.getElementById('detailLocation').textContent = `📍 ${listing.location}`;
+            document.getElementById('detailBedrooms').textContent = `${listing.bedrooms} ห้องนอน`;
+            document.getElementById('detailBathrooms').textContent = `${listing.bathrooms} ห้องน้ำ`;
+            document.getElementById('detailSize').textContent = `${listing.size} ตร.ม.`;
+            document.getElementById('detailFloor').textContent = `ชั้น ${listing.floor}`;
+            document.getElementById('detailDescription').textContent = listing.description;
+
+            // Badge
+            const badgeClass = `badge-${listing.tier}`;
+            const badgeText = getTierLabel(listing.tier);
+            document.getElementById('detailBadge').innerHTML = `<div class="listing-badge ${badgeClass}" style="position: static;">${badgeText}</div>`;
+
+            // Seller info
+            document.getElementById('sellerName').textContent = 'คุณสมชาย';
+            document.getElementById('sellerTier').textContent = getTierLabel(listing.tier);
+            document.getElementById('sellerAvatar').textContent = 'ส';
+
+            // Contact info
+            document.getElementById('detailContactNumber').textContent = '***-***-****';
+            document.getElementById('detailShowContactBtn').style.display = 'block';
+            document.getElementById('detailConsentCheck').checked = false;
+            
+            // Listing code and date
+            document.getElementById('listingCode').textContent = `CS-${listing.id.toString().padStart(3, '0')}`;
+            document.getElementById('listingDate').textContent = '15 ม.ค. 2568';
+
+            // Store current listing for contact
+            currentListingId = listingId;
+
+            // Show detail page
+            showPage('listingDetail');
+        }
+
+        function showDetailContact() {
+            const checkbox = document.getElementById('detailConsentCheck');
+            if (!checkbox.checked) {
+                alert('กรุณายอมรับข้อตกลงก่อนดูเบอร์ติดต่อ');
+                return;
+            }
+
+            const listing = mockListings.find(l => l.id === currentListingId);
+            if (listing) {
+                document.getElementById('detailContactNumber').textContent = listing.contactPhone;
+                document.getElementById('detailShowContactBtn').style.display = 'none';
+            }
+        }
+
+        function shareListing() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.getElementById('detailTitle').textContent,
+                    text: 'ดูคอนโดนี้ใน CondoSwift',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('คัดลอกลิงก์แล้ว!');
+                }).catch(() => {
+                    alert('ไม่สามารถแชร์ได้');
+                });
+            }
+        }
+
+        // Utility functions
+        function getTierLabel(tier) {
+            switch (tier) {
+                case 'grey': return 'ยืนยันโทรศัพท์';
+                case 'green': return 'ยืนยันเอกสาร';
+                case 'gold': return 'Exclusive';
+                default: return 'ยืนยันโทรศัพท์';
+            }
+        }
+
+        function showAlert(containerId, type, message) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        // Navigation functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Update nav active state based on page
+            if (pageId === 'home') {
+                document.querySelector('a[onclick="showPage(\'home\')"]').classList.add('active');
+            }
+            
+            if (pageId === 'home' && document.getElementById('allListings').innerHTML === '') {
+                loadAllListings();
+            }
+            
+            // Scroll to top when changing pages
+            window.scrollTo(0, 0);
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Reset auth modal state when opening
+            if (modalId === 'authModal') {
+                resetAuthModal();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            const alertContainers = ['alertContainer', 'otpAlerts', 'postListingAlerts'];
+            alertContainers.forEach(id => {
+                const container = document.getElementById(id);
+                if (container) container.innerHTML = '';
+            });
+            
+            // Reset auth modal state when closing
+            if (modalId === 'authModal') {
+                resetAuthModal();
+            }
         }
     </script>
 </body>
